@@ -40,8 +40,8 @@ module.exports = class BinarySearchTree {
   }
 
   has(data) {
-   var node = this.root2;
-    var traverse = function(node) {
+    let node = this.root2;
+    let traverse = function(node) {
         if (!node) return false;
         if (data === node.data) {
             return true;
@@ -55,22 +55,91 @@ module.exports = class BinarySearchTree {
   }
 
   find(data) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.root2) {
+      return;
+    }
+
+    let node = this.root2;
+    let traverse = function(node) {
+        if (!node) return false;
+        if (data === node.data) {
+            return node;
+        } else if (data > node.data) {
+            return traverse(node.right);
+        } else if (data < node.data) {
+            return traverse(node.left);
+        } 
+    };
+    return traverse(node) || null;
+    
   }
 
   remove(data) {
-    this.root2 = this.removeNode(this.root2, data);
+    this.root2 = removeNode(this.root2, data);
+
+    function removeNode(node, data) {
+      if (!node) {
+        return null;
+      }
+
+      if (data < node.data) {
+        node.left = removeNode(node.left, data);
+        return node;
+      } else if (node.data < data) {
+        node.right = removeNode(node.right, data);
+        return node;
+      } else {
+        if (!node.left && !node.right) {
+          return null;
+        }
+
+        if (!node.left) {
+          node = node.right;
+          return node;
+        }
+
+        if (!node.right) {
+          node = node.left;
+          return node;
+        }
+
+        let minFromRight = node.right;
+        while (minFromRight.left) {
+          minFromRight = minFromRight.left;
+        }
+        node.data = minFromRight.data;
+
+        node.right = removeNode(node.right, minFromRight.data);
+
+        return node;
+      }
+    }
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.root2) {
+      return;
+    }
+
+    let node = this.root2;
+    while (node.left) {
+      node = node.left;
+    }
+
+    return node.data;
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+      if (!this.root2) {
+      return;
+    }
+
+    let node = this.root2;
+    while (node.right) {
+      node = node.right;
+    }
+
+    return node.data;
   }
 
 }
